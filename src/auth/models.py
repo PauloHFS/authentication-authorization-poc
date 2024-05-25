@@ -1,10 +1,10 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 
-from ..models import Base
+from ..database import BaseModel
 
 
-class User(Base):
-    __tablename__ = "users"
+class User(BaseModel):
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True, index=True)
