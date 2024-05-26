@@ -1,20 +1,15 @@
-import os
-from datetime import datetime, timedelta, timezone
-from typing import Annotated
-
-import jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt.exceptions import InvalidTokenError
-from passlib.context import CryptContext
+"""Service layer for the auth module."""
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from . import models, schemas, util
+from src.auth import models, schemas, util
 
 
-def signin(db: Session, form_data: OAuth2PasswordRequestForm):
+def signin(db: Session,
+           form_data: OAuth2PasswordRequestForm):
+    """Signin a user and return a token."""
     db_user = db.query(models.User).filter(
-        models.User.email == form_data.username).first()
+        models.User.username == form_data.username).first()
     if not db_user:
         return None
 
@@ -31,15 +26,18 @@ def signin(db: Session, form_data: OAuth2PasswordRequestForm):
     return db_user
 
 
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(db: Session,
+                user: schemas.UserCreate):
+    """Create a new user."""
     hashed_password = util.get_password_hash(user.password)
-    db_user = models.User(
-        email=user.email, password=hashed_password)
+    db_user = models.User(username=user.username, password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 
-def get_user(db: Session, user_id: int):
+def get_user(db: Session,
+             user_id: int):
+    """Get a user by id."""
     return db.query(models.User).filter(models.User.id == user_id).first()
