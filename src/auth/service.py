@@ -1,7 +1,12 @@
-from datetime import timedelta
+import os
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
+import jwt
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from . import models, schemas, util
@@ -34,3 +39,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_user(db: Session, user_id: int):
+    return db.query(models.User).filter(models.User.id == user_id).first()
