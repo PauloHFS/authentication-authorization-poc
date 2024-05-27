@@ -8,6 +8,6 @@ dev:
 	fastapi dev src/main.py
 
 test:
-	rm -rvf test.db
-	touch test.db
-	pytest
+	ENV=TEST alembic downgrade base
+	ENV=TEST alembic upgrade head
+	ENV=TEST pytest

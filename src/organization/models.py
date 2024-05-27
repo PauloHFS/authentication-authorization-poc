@@ -3,7 +3,6 @@ from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, String,
                         func)
 from sqlalchemy.orm import relationship
 
-from src.auth.models import User
 from src.database import BaseModel
 
 
@@ -18,7 +17,8 @@ class Organization(BaseModel):
     updated_at = Column(DateTime, default=func.now, onupdate=func.now)
     created_at = Column(DateTime, default=func.now)
 
-    clients = relationship("Client", back_populates="organization")
+    clients = relationship(
+        "Client", back_populates="organization", order_by="client.id")
 
 
 class Role(BaseModel):
@@ -35,10 +35,8 @@ class Role(BaseModel):
     created_at = Column(DateTime, default=func.now)
 
     organization = relationship("Organization", back_populates="roles")
-
-
-Organization.roles = relationship("Role", order_by=Role.id,
-                                  back_populates="organization")
+    permissions = relationship(
+        "Permission", back_populates="role", order_by="permission.id")
 
 
 class Membership(BaseModel):
@@ -55,14 +53,6 @@ class Membership(BaseModel):
     user = relationship("User", back_populates="memberships")
     organization = relationship("Organization", back_populates="memberships")
     role = relationship("Role", back_populates="memberships")
-
-
-User.memberships = relationship("Membership", order_by=Membership.organization_id,
-                                back_populates="user")
-Organization.memberships = relationship("Membership", order_by=Membership.user_id,
-                                        back_populates="organization")
-Role.memberships = relationship("Membership", order_by=Membership.role_id,
-                                back_populates="role")
 
 
 class Permission(BaseModel):
@@ -85,7 +75,3 @@ class Permission(BaseModel):
 
     def __repr__(self):
         return f"<Permission#{self.id} - {self.resource} - C[{self.can_create}]R[{self.can_read}]|U[{self.can_update}]|D[{self.can_delete}]>"
-
-
-Role.permissions = relationship("Permission", order_by=Permission.id,
-                                back_populates="role")

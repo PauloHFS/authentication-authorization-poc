@@ -17,9 +17,9 @@ class User(UserBase):
     """User schema."""
     id: int
 
-    class Config:
-        """Pydantic config."""
-        from_attributes = True
+    model_config = {
+        'from_attributes': True
+    }
 # <<<<<<<<<< User schemas <<<<<<<<<<
 
 

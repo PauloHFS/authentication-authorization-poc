@@ -3,7 +3,6 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from src.database import BaseModel
-from src.organization.models import Organization
 
 
 class Client(BaseModel):
@@ -16,14 +15,12 @@ class Client(BaseModel):
 
     name = Column(String, unique=True, nullable=False)
 
-    organization = relationship("organization", back_populates="clients")
+    organization = relationship(
+        "Organization", back_populates="clients")
+    sales = relationship("Sale", back_populates="client", order_by="sale.id")
 
     updated_at = Column(DateTime, default=func.now, onupdate=func.now)
     created_at = Column(DateTime, default=func.now)
-
-
-Organization.clients = relationship("client", order_by=Client.id,
-                                    back_populates="organization")
 
 
 class Sale(BaseModel):
@@ -36,10 +33,7 @@ class Sale(BaseModel):
     description = Column(String, nullable=False)
     total = Column(Integer, nullable=False)
 
-    client = relationship("client", back_populates="sales")
+    client = relationship("Client", back_populates="sales")
 
     updated_at = Column(DateTime, default=func.now, onupdate=func.now)
     created_at = Column(DateTime, default=func.now)
-
-
-Client.sales = relationship("sale", order_by=Sale.id, back_populates="client")
