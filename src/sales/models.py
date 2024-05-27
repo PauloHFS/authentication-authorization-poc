@@ -2,8 +2,8 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from src.auth.models import Organization
 from src.database import BaseModel
+from src.organization.models import Organization
 
 
 class Client(BaseModel):
