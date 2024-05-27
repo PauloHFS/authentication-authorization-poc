@@ -17,4 +17,5 @@ class User(BaseModel):
     updated_at = Column(DateTime, default=func.now, onupdate=func.now)
     created_at = Column(DateTime, default=func.now)
 
-    memberships = relationship("Membership", back_populates="user")
+    memberships = relationship(
+        "Membership", back_populates="user", foreign_keys="Membership.user_id")
