@@ -6,10 +6,18 @@ client = TestClient(app)
 
 
 def test_create_user():
+
+    request_data = {
+        "username": "test@gmail.com",
+        "password": "test",
+    }
+
     response = client.post(
         "/auth/signup",
-        data={
-            "username": "test-user@gmail.com",
-            "password": "test-password",
-        })
+        json=request_data)
+
     assert response.status_code == 200
+    response_data = response.json()
+
+    assert response_data["username"] == request_data["username"]
+    assert "id" in response_data

@@ -1,4 +1,8 @@
 """"Sales models."""
+
+# disable this cause of func.now()
+# pylint: disable=not-callable
+
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
@@ -18,8 +22,8 @@ class Client(BaseModel):
 
     name = Column(String, unique=True, nullable=False)
 
-    updated_at = Column(DateTime, default=func.now, onupdate=func.now)
-    created_at = Column(DateTime, default=func.now)
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
 
     sales = relationship("Sale", back_populates="client")
 
@@ -36,5 +40,5 @@ class Sale(BaseModel):
     description = Column(String, nullable=False)
     total = Column(Integer, nullable=False)
 
-    updated_at = Column(DateTime, default=func.now, onupdate=func.now)
-    created_at = Column(DateTime, default=func.now)
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, default=func.now())
