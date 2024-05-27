@@ -8,5 +8,6 @@ dev:
 	fastapi dev src/main.py
 
 test:
-	rm -rv test.db
+	rm -rvf test.db
+	touch test.db
 	pytest

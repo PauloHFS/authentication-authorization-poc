@@ -19,7 +19,7 @@ class User(UserBase):
 
     class Config:
         """Pydantic config."""
-        orm_mode = True
+        from_attributes = True
 # <<<<<<<<<< User schemas <<<<<<<<<<
 
 
